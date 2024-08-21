@@ -1604,6 +1604,15 @@ static NSString *const WMFDidShowOnboarding = @"DidShowOnboarding5.3";
     [self.currentTabNavigationController popToRootViewControllerAnimated:NO];
 }
 
+#pragma mark - Places VC
+- (void)showPlaces {
+    [self setSelectedIndex:WMFAppTabTypePlaces];
+    [self.currentTabNavigationController popToRootViewControllerAnimated:NO];
+    [self.currentTabNavigationController dismissViewControllerAnimated:YES completion:nil];
+    [[self placesViewController] updateViewModeToMap];
+    [[self placesViewController] cancelSearch] ;
+}
+
 #pragma mark - Last Read Article
 
 - (void)showLastReadArticleAnimated:(BOOL)animated {

@@ -2037,6 +2037,15 @@ class PlacesViewController: ViewController, UISearchBarDelegate, ArticlePopoverV
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: view)
     }
     
+    @objc func cancelSearch() {
+        searchBar.endEditing(true)
+        currentSearch = nil
+        if let text = searchBar.text, !text.isEmpty {
+            performDefaultSearchIfNecessary(withRegion: nil)
+            UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: view)
+        }
+    }
+    
     // MARK: - UISearchBarDelegate
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {

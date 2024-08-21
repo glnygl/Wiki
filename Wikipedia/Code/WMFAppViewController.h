@@ -21,6 +21,8 @@ extern NSString *const WMFLanguageVariantAlertsLibraryVersion; // NSNumber
 
 - (void)showSplashView;
 
+- (void)showPlaces;
+
 - (void)hideSplashView;
 
 - (void)hideSplashScreenAndResumeApp; // Updates explore feed & other heavy network lifitng

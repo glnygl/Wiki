@@ -108,6 +108,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             return
         }
         
+        if firstURL.absoluteString.contains("glnygl") {
+            appViewController.showPlaces()
+        }
+        
+        print("gggggggg \(URLContexts.first?.options.sourceApplication)")
+        
         guard let activity = NSUserActivity.wmf_activity(forWikipediaScheme: firstURL) ?? NSUserActivity.wmf_activity(for: firstURL) else {
             resumeAppIfNecessary()
             return

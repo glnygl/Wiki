@@ -6,6 +6,9 @@
 @class ReadingList;
 @class WMFRootNavigationController;
 
+@class RedirectLocation;
+
+
 NS_ASSUME_NONNULL_BEGIN
 
 extern NSString *const WMFLanguageVariantAlertsLibraryVersion; // NSNumber
@@ -21,7 +24,7 @@ extern NSString *const WMFLanguageVariantAlertsLibraryVersion; // NSNumber
 
 - (void)showSplashView;
 
-- (void)showPlaces;
+- (void)showPlaces:(RedirectLocation* )redirectLocation;
 
 - (void)hideSplashView;
 

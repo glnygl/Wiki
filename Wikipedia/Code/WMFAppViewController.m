@@ -1605,13 +1605,15 @@ static NSString *const WMFDidShowOnboarding = @"DidShowOnboarding5.3";
 }
 
 #pragma mark - Places VC
-- (void)showPlaces {
+- (void)showPlaces:(RedirectLocation*)redirectLocation{
     [self setSelectedIndex:WMFAppTabTypePlaces];
     [self.currentTabNavigationController popToRootViewControllerAnimated:NO];
     [self.currentTabNavigationController dismissViewControllerAnimated:YES completion:nil];
     [[self placesViewController] updateViewModeToMap];
-    [[self placesViewController] cancelSearch] ;
+    [[self placesViewController] cancelSearch];
+    [[self placesViewController] setLocationWithLocation:redirectLocation];
 }
+
 
 #pragma mark - Last Read Article
 

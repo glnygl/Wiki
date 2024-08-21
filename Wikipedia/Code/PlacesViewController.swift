@@ -42,6 +42,8 @@ class PlacesViewController: ViewController, UISearchBarDelegate, ArticlePopoverV
     fileprivate let popoverFadeDuration = 0.25
     fileprivate let searchHistoryCountLimit = 15
     fileprivate var searchSuggestionController: PlaceSearchSuggestionController!
+    
+    fileprivate var redirectLocation: RedirectLocation?
 
     fileprivate var siteURL: URL {
         return MWKDataStore.shared().primarySiteURL ?? NSURL.wmf_URLWithDefaultSiteAndCurrentLocale()!
@@ -2046,6 +2048,10 @@ class PlacesViewController: ViewController, UISearchBarDelegate, ArticlePopoverV
         }
     }
     
+    @objc func setLocation(location: RedirectLocation) {
+        redirectLocation = location
+    }
+    
     // MARK: - UISearchBarDelegate
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
@@ -2138,7 +2144,18 @@ class PlacesViewController: ViewController, UISearchBarDelegate, ArticlePopoverV
     }
     
     func zoomAndPanMapView(toLocation location: CLLocation) {
-        let region = [location.coordinate].wmf_boundingRegion(with: 10000)
+        
+        var newLocation: CLLocation?
+        
+        if let redirectLocation = redirectLocation {
+            let lat = Double(redirectLocation.lat) ?? 0.0
+            let long = Double(redirectLocation.long) ?? 0.0
+            newLocation = CLLocation(latitude: lat, longitude: long)
+        } else {
+            newLocation = location
+        }
+        
+        let region = [newLocation!.coordinate].wmf_boundingRegion(with: 10000)
         mapRegion = region
         if let searchRegion = currentSearchRegion, isDistanceSignificant(betweenRegion: searchRegion, andRegion: region) {
             performDefaultSearch(withRegion: mapRegion)

@@ -109,10 +109,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
         
         if firstURL.absoluteString.contains("glnygl") {
-            appViewController.showPlaces()
+            let urlComponents = URLComponents(url: firstURL, resolvingAgainstBaseURL: false)
+            let queryItems = urlComponents?.queryItems
+            let name = queryItems?.first(where: { $0.name == "name" })?.value ?? ""
+            let lat = queryItems?.first(where: { $0.name == "lat" })?.value ?? ""
+            let long = queryItems?.first(where: { $0.name == "long" })?.value ?? ""
+            appViewController.showPlaces(RedirectLocation(name: name, lat: lat, long: long))
         }
         
-        print("gggggggg \(URLContexts.first?.options.sourceApplication)")
         
         guard let activity = NSUserActivity.wmf_activity(forWikipediaScheme: firstURL) ?? NSUserActivity.wmf_activity(for: firstURL) else {
             resumeAppIfNecessary()

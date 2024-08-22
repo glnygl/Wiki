@@ -2049,7 +2049,16 @@ class PlacesViewController: ViewController, UISearchBarDelegate, ArticlePopoverV
     }
     
     @objc func setLocation(location: RedirectLocation) {
-        redirectLocation = location
+        let lat = Double(location.lat) ?? 0.0
+        let long = Double(location.long) ?? 0.0
+        let newLocation = CLLocation(latitude: lat, longitude: long)
+        let newRegion = [newLocation.coordinate].wmf_boundingRegion(with: 10000)
+        
+        if mapView == nil {
+            redirectLocation = location
+        } else {
+            performDefaultSearchIfNecessary(withRegion: newRegion) 
+        }
     }
     
     // MARK: - UISearchBarDelegate

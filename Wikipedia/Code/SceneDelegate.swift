@@ -108,7 +108,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         // MARK: Workaround we need articleURL for redirect with openURL func
         
-        if firstURL.absoluteString.contains("places") {
+        if firstURL.absoluteString.contains("glny") {
             let urlComponents = URLComponents(url: firstURL, resolvingAgainstBaseURL: false)
             let queryItems = urlComponents?.queryItems
             let name = queryItems?.first(where: { $0.name == "name" })?.value ?? ""

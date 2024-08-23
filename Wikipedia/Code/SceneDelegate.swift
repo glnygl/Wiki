@@ -29,8 +29,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         self.window = window
         
-        guard let appViewController else {
-            return
+        guard let appViewController else { return }
+        
+        if let firstURL = connectionOptions.urlContexts.first?.url {
+            openURL(firstURL: firstURL)
         }
         
         UNUserNotificationCenter.current().delegate = appViewController
@@ -100,23 +102,27 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         
-        guard let appViewController else {
-            return
-        }
+        guard let appViewController else { return }
         
-        guard let firstURL = URLContexts.first?.url else {
-            return
-        }
+        guard let firstURL = URLContexts.first?.url else { return }
         
-        if firstURL.absoluteString.contains("glnygl") {
+        // MARK: Workaround we need articleURL for redirect with openURL func
+        
+        if firstURL.absoluteString.contains("places") {
             let urlComponents = URLComponents(url: firstURL, resolvingAgainstBaseURL: false)
             let queryItems = urlComponents?.queryItems
             let name = queryItems?.first(where: { $0.name == "name" })?.value ?? ""
             let lat = queryItems?.first(where: { $0.name == "lat" })?.value ?? ""
             let long = queryItems?.first(where: { $0.name == "long" })?.value ?? ""
             appViewController.showPlaces(RedirectLocation(name: name, lat: lat, long: long))
+            return
         }
         
+        openURL(firstURL: firstURL)
+    }
+    
+    private func openURL(firstURL: URL) {
+        guard let appViewController else { return }
         
         guard let activity = NSUserActivity.wmf_activity(forWikipediaScheme: firstURL) ?? NSUserActivity.wmf_activity(for: firstURL) else {
             resumeAppIfNecessary()
@@ -126,9 +132,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         appViewController.showSplashView()
         _ = appViewController.processUserActivity(activity, animated: false) { [weak self] in
             
-            guard let self else {
-                return
-            }
+            guard let self else { return }
             
             if appNeedsResume {
                 resumeAppIfNecessary()

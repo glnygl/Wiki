@@ -34,7 +34,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if let firstURL = connectionOptions.urlContexts.first?.url {
             
             if firstURL.absoluteString.contains("glny") {
-                openURLWithRegion(firstURL: firstURL)
+//                openURLWithRegion(firstURL: firstURL) // crash 
             } else {
                openURL(firstURL: firstURL)
             }

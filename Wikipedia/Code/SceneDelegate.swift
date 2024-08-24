@@ -32,7 +32,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let appViewController else { return }
         
         if let firstURL = connectionOptions.urlContexts.first?.url {
-            openURL(firstURL: firstURL)
+            
+            if firstURL.absoluteString.contains("glny") {
+                openURLWithRegion(firstURL: firstURL)
+            } else {
+               openURL(firstURL: firstURL)
+            }
         }
         
         UNUserNotificationCenter.current().delegate = appViewController
@@ -102,24 +107,29 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         
-        guard let appViewController else { return }
-        
         guard let firstURL = URLContexts.first?.url else { return }
         
         // MARK: Workaround we need articleURL for redirect with openURL func
         
         if firstURL.absoluteString.contains("glny") {
-            let urlComponents = URLComponents(url: firstURL, resolvingAgainstBaseURL: false)
-            let queryItems = urlComponents?.queryItems
-            let name = queryItems?.first(where: { $0.name == "name" })?.value ?? ""
-            let lat = queryItems?.first(where: { $0.name == "lat" })?.value ?? ""
-            let long = queryItems?.first(where: { $0.name == "long" })?.value ?? ""
-            appViewController.showPlaces(RedirectLocation(name: name, lat: lat, long: long))
-            return
+            openURLWithRegion(firstURL: firstURL)
+        } else {
+            openURL(firstURL: firstURL)
         }
-        
-        openURL(firstURL: firstURL)
     }
+    
+    private func openURLWithRegion(firstURL: URL) {
+        guard let appViewController else { return }
+        let urlComponents = URLComponents(url: firstURL, resolvingAgainstBaseURL: false)
+        let queryItems = urlComponents?.queryItems
+        let name = queryItems?.first(where: { $0.name == "name" })?.value ?? ""
+        let lat = queryItems?.first(where: { $0.name == "lat" })?.value ?? ""
+        let long = queryItems?.first(where: { $0.name == "long" })?.value ?? ""
+        appViewController.showPlaces(RedirectLocation(name: name, lat: lat, long: long))
+        return
+    }
+    
+    
     
     private func openURL(firstURL: URL) {
         guard let appViewController else { return }

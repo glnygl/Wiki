@@ -72,7 +72,6 @@ NSString *const WMFLanguageVariantAlertsLibraryVersion = @"WMFLanguageVariantAle
 @property (nonatomic, strong) NSUserActivity *unprocessedUserActivity;
 @property (nonatomic, strong) UIApplicationShortcutItem *unprocessedShortcutItem;
 
-@property (nonatomic) BOOL shouldRedirectLocation;
 @property (nonatomic) RedirectLocation *redirectLocation;
 
 @property (nonatomic, strong) NSMutableDictionary *backgroundTasks;
@@ -931,9 +930,9 @@ NSString *const WMFLanguageVariantAlertsLibraryVersion = @"WMFLanguageVariantAle
             });
         };
 
-        if (self.shouldRedirectLocation) {
+        if (self.redirectLocation != nil) {
            [self redirectLocations: self.redirectLocation];
-            self.shouldRedirectLocation = false;
+            self.redirectLocation = nil;
            done();
         } else if (self.notificationUserInfoToShow) {
             [self hideSplashView];
@@ -1614,7 +1613,6 @@ static NSString *const WMFDidShowOnboarding = @"DidShowOnboarding5.3";
 #pragma mark - Places VC
 - (void)showPlaces:(RedirectLocation*)redirectLocation appResume:(BOOL)appResume {
     if (appResume) {
-        self.shouldRedirectLocation = 1;
         self.redirectLocation = redirectLocation;
     } else {
         [self redirectLocations: redirectLocation];

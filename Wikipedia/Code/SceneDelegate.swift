@@ -34,7 +34,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if let firstURL = connectionOptions.urlContexts.first?.url {
             
             if firstURL.absoluteString.contains("glny") {
-//                openURLWithRegion(firstURL: firstURL) // crash 
+                openURLWithRegion(firstURL: firstURL, appResume: true)
             } else {
                openURL(firstURL: firstURL)
             }
@@ -112,23 +112,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // MARK: Workaround we need articleURL for redirect with openURL func
         
         if firstURL.absoluteString.contains("glny") {
-            openURLWithRegion(firstURL: firstURL)
+            openURLWithRegion(firstURL: firstURL, appResume: false)
         } else {
             openURL(firstURL: firstURL)
         }
     }
     
-    private func openURLWithRegion(firstURL: URL) {
+    private func openURLWithRegion(firstURL: URL, appResume: Bool) {
         guard let appViewController else { return }
         let urlComponents = URLComponents(url: firstURL, resolvingAgainstBaseURL: false)
         let queryItems = urlComponents?.queryItems
         let name = queryItems?.first(where: { $0.name == "name" })?.value ?? ""
         let lat = queryItems?.first(where: { $0.name == "lat" })?.value ?? ""
         let long = queryItems?.first(where: { $0.name == "long" })?.value ?? ""
-        appViewController.showPlaces(RedirectLocation(name: name, lat: lat, long: long))
+        appViewController.showPlaces(RedirectLocation(name: name, lat: lat, long: long), appResume: appResume)
         return
     }
-    
     
     
     private func openURL(firstURL: URL) {

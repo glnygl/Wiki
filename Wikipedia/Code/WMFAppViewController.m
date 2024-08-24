@@ -72,6 +72,9 @@ NSString *const WMFLanguageVariantAlertsLibraryVersion = @"WMFLanguageVariantAle
 @property (nonatomic, strong) NSUserActivity *unprocessedUserActivity;
 @property (nonatomic, strong) UIApplicationShortcutItem *unprocessedShortcutItem;
 
+@property (nonatomic) BOOL shouldRedirectLocation;
+@property (nonatomic) RedirectLocation *redirectLocation;
+
 @property (nonatomic, strong) NSMutableDictionary *backgroundTasks;
 
 @property (nonatomic, strong) WMFNotificationsController *notificationsController;
@@ -928,7 +931,11 @@ NSString *const WMFLanguageVariantAlertsLibraryVersion = @"WMFLanguageVariantAle
             });
         };
 
-        if (self.notificationUserInfoToShow) {
+        if (self.shouldRedirectLocation) {
+           [self redirectLocations: self.redirectLocation];
+            self.shouldRedirectLocation = false;
+           done();
+        } else if (self.notificationUserInfoToShow) {
             [self hideSplashView];
             [self showNotificationCenterForNotificationInfo:self.notificationUserInfoToShow];
             self.notificationUserInfoToShow = nil;
@@ -964,7 +971,8 @@ NSString *const WMFLanguageVariantAlertsLibraryVersion = @"WMFLanguageVariantAle
             [self hideSplashView];
             [self showExplore];
             done();
-        } else {
+        }
+        else {
             [self hideSplashView];
             done();
         }
@@ -1528,7 +1536,6 @@ NSString *const WMFLanguageVariantAlertsLibraryVersion = @"WMFLanguageVariantAle
     }
     return _placesViewController;
 }
-
 #pragma mark - Onboarding
 
 static NSString *const WMFDidShowOnboarding = @"DidShowOnboarding5.3";
@@ -1605,7 +1612,16 @@ static NSString *const WMFDidShowOnboarding = @"DidShowOnboarding5.3";
 }
 
 #pragma mark - Places VC
-- (void)showPlaces:(RedirectLocation*)redirectLocation{
+- (void)showPlaces:(RedirectLocation*)redirectLocation appResume:(BOOL)appResume {
+    if (appResume) {
+        self.shouldRedirectLocation = 1;
+        self.redirectLocation = redirectLocation;
+    } else {
+        [self redirectLocations: redirectLocation];
+    }
+}
+
+- (void)redirectLocations:(RedirectLocation*)redirectLocation {
     [self setSelectedIndex:WMFAppTabTypePlaces];
     [self.currentTabNavigationController popToRootViewControllerAnimated:NO];
     [self.currentTabNavigationController dismissViewControllerAnimated:YES completion:nil];
@@ -1613,7 +1629,6 @@ static NSString *const WMFDidShowOnboarding = @"DidShowOnboarding5.3";
     [[self placesViewController] cancelSearch];
     [[self placesViewController] setLocationWithLocation:redirectLocation];
 }
-
 
 #pragma mark - Last Read Article
 

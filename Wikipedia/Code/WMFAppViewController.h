@@ -24,7 +24,7 @@ extern NSString *const WMFLanguageVariantAlertsLibraryVersion; // NSNumber
 
 - (void)showSplashView;
 
-- (void)showPlaces:(RedirectLocation* )redirectLocation;
+- (void)showPlaces:(RedirectLocation*)redirectLocation appResume:(BOOL)appResume;
 
 - (void)hideSplashView;
 
